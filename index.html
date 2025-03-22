@@ -56,13 +56,41 @@
       .css-inwm4l,
       .css-13yk3gq,
       #qr-modal-toggle-button,
-      a[target="_blank"]{
+      a[target="_blank"] {
         display: none !important;
+      }
+
+      #gameInput {
+        display: none;
+      }
+
+      #gameInput.active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
     </style>
   </head>
   <body>
     <div class="loader" id="loader">Loading…</div>
+
+    <div class="loader" id="gameInput">
+      <h2>Welcome to SaneGames.</h2>
+      <h3>
+        This is a better client for all
+        <a href="https://www.crazygames.com/" target="_blank">CrazyGames</a>
+        games, with no ads or annoying buttons.
+      </h3>
+      <p>
+        You have not set a slug! So please proceed to the main
+        <a href="https://www.crazygames.com/" target="_blank">CrazyGames</a>
+        website, find a game, and then copy the game slug (e.g.,
+        crazy-flips-3d) and put it below.
+      </p>
+      <input type="text" placeholder="crazy-flips-3d" id="gameSlugInput" />
+      <button onclick="loadGameFromInput()">Play Game</button>
+    </div>
+
     <script>
       const adBlockList = [
         'doubleclick.net',
@@ -98,10 +126,10 @@
       })();
 
       function removeAds() {
-        document.querySelectorAll("iframe, script, div").forEach(el => {
+        document.querySelectorAll('iframe, script, div').forEach(el => {
           if (adBlockList.some(domain => el.src && el.src.includes(domain))) {
             el.remove();
-            console.warn("Removed ad element:", el);
+            console.warn('Removed ad element:', el);
           }
         });
       }
@@ -153,24 +181,28 @@
         let params = new URLSearchParams(window.location.search);
         let gameSlug = params.get('game');
         let loader = document.getElementById('loader');
+        let gameInput = document.getElementById('gameInput');
 
         if (!gameSlug) {
-          setupGameInput(loader);
+          loader.style.display = 'none';
+          gameInput.classList.add('active');
           return;
         }
 
         let options = await fetchGameConfig(gameSlug);
         if (!options) {
-          loader.textContent = "Loading failed. Either there's some error, or, most likely, you mistyped the slug.";
+          loader.textContent =
+            "Loading failed. Either there's some error, or, most likely, you mistyped the slug.";
           return;
         }
 
         let script = document.createElement('script');
-        script.src = `https://builds.crazygames.com/gameframe/v1/bundle.js`;
+        script.src = 'https://builds.crazygames.com/gameframe/v1/bundle.js';
         script.onload = () => {
           if (window.Crazygames) {
             Crazygames.load(options).then(() => {
-              document.getElementById('loader').remove();
+              loader.remove();
+              gameInput.remove();
             });
           } else {
             console.error('Crazygames SDK failed to load.');
@@ -179,39 +211,12 @@
         document.head.appendChild(script);
       }
 
-      function setupGameInput(loader) {
-        loader.innerHTML = '';
-
-        let title = document.createElement('h2');
-        title.textContent = 'Welcome to SaneGames.';
-        loader.appendChild(title);
-
-        let subtitle = document.createElement('h3');
-        subtitle.textContent =
-          'This is a better client for all CrazyGames games, with no ads or annoying buttons.';
-        loader.appendChild(subtitle);
-
-        let instructions = document.createElement('p');
-        instructions.textContent =
-          'You have not set a slug! So please proceed to the main CrazyGames website, find a game, and then copy the game slug (e.g., crazy-flips-3d) and put it below.';
-        loader.appendChild(instructions);
-
-        let input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = 'crazy-flips-3d';
-        loader.appendChild(input);
-
-        let button = document.createElement('button');
-        button.textContent = 'Play Game';
-        button.onclick = () => {
-          let gameSlug = input.value;
-          if (gameSlug) {
-            let newUrl =
-              window.location.href.split('?')[0] + '?game=' + gameSlug;
-            window.location.href = newUrl;
-          }
-        };
-        loader.appendChild(button);
+      function loadGameFromInput() {
+        let gameSlug = document.getElementById('gameSlugInput').value;
+        if (gameSlug) {
+          let newUrl = window.location.href.split('?')[0] + '?game=' + gameSlug;
+          window.location.href = newUrl;
+        }
       }
 
       loadGame();
