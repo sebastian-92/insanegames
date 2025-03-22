@@ -73,7 +73,8 @@
       }
 
       a {
-        color: #6842ff;
+        color: #8d71ff;
+        cursor: pointer
       }
 
       #recommendationsPopup {
@@ -134,7 +135,7 @@
         <a href="https://www.crazygames.com/" target="_blank">CrazyGames</a>
         website, find a game, and then copy the game slug in the URL (e.g.,
         crazy-flips-3d) and put it below.
-        <a onclick="recommendations()">Game Recommendations</a>
+        <a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
       </p>
       <input type="text" placeholder="crazy-flips-3d" id="gameSlugInput" />
       <button onclick="loadGameFromInput()">Play Game</button>
@@ -168,6 +169,8 @@
           >
         </li>
       </ul>
+
+      <h3 onclick="closeRecommendations()">Close</h3>
     </div>
 
     <script>
