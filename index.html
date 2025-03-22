@@ -4,6 +4,19 @@
     <title>SaneGames</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
+    <meta name="description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+    <meta name="keywords" content="games, free games, online games, no ads, crazygames, client, wrapper, open source" />
+    <meta name="author" content="SaneGames (Elouan Grimm)" />
+
+    <meta property="og:title" content="SaneGames" />
+    <meta property="og:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+    <meta property="og:image" content="assets/thumbnail.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sanegames.vercel.app" />
+
     <style>
       html,
       body {
@@ -122,6 +135,7 @@
     <div class="loader" id="loader">Loading…</div>
 
     <div class="loader" id="gameInput">
+      <img src="assets/favicon.png" alt="SaneGames Logo" style="width:100px; display:block; margin: 0 auto;">
       <h1>Welcome to <b>SaneGames.</b></h1>
       <h3>
         A better client for all
@@ -275,7 +289,7 @@
           return;
         }
 
-        document.title = options.title + " | SaneGames" || "SaneGames";
+        document.title = options.gameName + " | SaneGames" || "SaneGames";
 
         let script = document.createElement('script');
         script.src = 'https://builds.crazygames.com/gameframe/v1/bundle.js';
