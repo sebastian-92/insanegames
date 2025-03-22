@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SaneGames</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background-color: #1e293b;
+        color: white;
+        font-family: 'Arial', sans-serif;
+      }
+
+      .loader {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .loader > * {
+        margin: 0.5em 0;
+      }
+
+      input[type='text'] {
+        padding: 0.75em;
+        border: none;
+        border-radius: 0.5em;
+        font-size: 1em;
+        background-color: #334155;
+        color: white;
+        margin-bottom: 1em;
+      }
+
+      button {
+        padding: 0.75em 1.5em;
+        border: none;
+        border-radius: 0.5em;
+        background-color: #6842FF;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #714ff7;
+      }
+
+      .css-inwm4l,
+      .css-13yk3gq,
+      #qr-modal-toggle-button,
+      a[target="_blank"]{
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader" id="loader">Loading…</div>
+    <script>
+      const adBlockList = [
+        'doubleclick.net',
+        'adservice.google.com',
+        'googlesyndication.com',
+        'ads.crazygames.com',
+        'pagead2.googlesyndication.com',
+        'securepubads.g.doubleclick.net',
+        'cpx.to',
+        'adnxs.com',
+        'googletagmanager.com',
+        'imasdk.googleapis.com',
+      ];
+
+      (function blockAds() {
+        let originalFetch = window.fetch;
+        window.fetch = async function (...args) {
+          if (adBlockList.some(domain => args[0].includes(domain))) {
+            console.warn('Blocked ad request:', args[0]);
+            return new Response(null, { status: 403, statusText: 'Blocked' });
+          }
+          return originalFetch(...args);
+        };
+
+        let originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (method, url) {
+          if (adBlockList.some(domain => url.includes(domain))) {
+            console.warn('Blocked ad request:', url);
+            return;
+          }
+          return originalOpen.apply(this, arguments);
+        };
+      })();
+
+      function removeAds() {
+        document.querySelectorAll("iframe, script, div").forEach(el => {
+          if (adBlockList.some(domain => el.src && el.src.includes(domain))) {
+            el.remove();
+            console.warn("Removed ad element:", el);
+          }
+        });
+      }
+
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(() => removeAds());
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      async function fetchWithTimeout(url, timeout = 3000) {
+        return Promise.race([
+          fetch(url),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout')), timeout),
+          ),
+        ]);
+      }
+
+      async function fetchGameConfig(gameSlug) {
+        try {
+          let response = await fetchWithTimeout(
+            `https://opencors.netlify.app/.netlify/functions/main?url=${encodeURIComponent(
+              `https://games.crazygames.com/en_US/${gameSlug}/index.html`,
+            )}`,
+          );
+          let text = await response.text();
+          let match = text.match(/var options = (\{[\s\S]*?\});/);
+          return match ? JSON.parse(match[1]) : null;
+        } catch (error) {
+          console.warn('Primary fetch failed, attempting fallback:', error);
+          try {
+            let response = await fetchWithTimeout(
+              `https://corsproxy.io/?key=d6168cb0&url=${encodeURIComponent(
+                `https://games.crazygames.com/en_US/${gameSlug}/index.html`,
+              )}`,
+            );
+            let text = await response.text();
+            let match = text.match(/var options = (\{[\s\S]*?\});/);
+            return match ? JSON.parse(match[1]) : null;
+          } catch (error) {
+            console.error('Fallback fetch failed:', error);
+            return null;
+          }
+        }
+      }
+
+      async function loadGame() {
+        let params = new URLSearchParams(window.location.search);
+        let gameSlug = params.get('game');
+        let loader = document.getElementById('loader');
+
+        if (!gameSlug) {
+          setupGameInput(loader);
+          return;
+        }
+
+        let options = await fetchGameConfig(gameSlug);
+        if (!options) {
+          loader.textContent = "Loading failed. Either there's some error, or, most likely, you mistyped the slug.";
+          return;
+        }
+
+        let script = document.createElement('script');
+        script.src = `https://builds.crazygames.com/gameframe/v1/bundle.js`;
+        script.onload = () => {
+          if (window.Crazygames) {
+            Crazygames.load(options).then(() => {
+              document.getElementById('loader').remove();
+            });
+          } else {
+            console.error('Crazygames SDK failed to load.');
+          }
+        };
+        document.head.appendChild(script);
+      }
+
+      function setupGameInput(loader) {
+        loader.innerHTML = '';
+
+        let title = document.createElement('h2');
+        title.textContent = 'Welcome to SaneGames.';
+        loader.appendChild(title);
+
+        let subtitle = document.createElement('h3');
+        instructions.textContent =
+          'This is a better client for all CrazyGames games, with no ads or annoying buttons.';
+        loader.appendChild(instructions);
+
+        let instructions = document.createElement('p');
+        instructions.textContent =
+          'You have not set a slug! So please proceed to the main CrazyGames website, find a game, and then copy the game slug (e.g., crazy-flips-3d) and put it below.';
+        loader.appendChild(instructions);
+
+        let input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'crazy-flips-3d';
+        loader.appendChild(input);
+
+        let button = document.createElement('button');
+        button.textContent = 'Play Game';
+        button.onclick = () => {
+          let gameSlug = input.value;
+          if (gameSlug) {
+            let newUrl =
+              window.location.href.split('?')[0] + '?game=' + gameSlug;
+            window.location.href = newUrl;
+          }
+        };
+        loader.appendChild(button);
+      }
+
+      loadGame();
+    </script>
+  </body>
+</html>
