@@ -158,17 +158,18 @@
 			A better client for all CrazyGames games, with no ads or annoying UI.
 		</h3>
 		<p>
-			You have not set a slug! So please proceed to the main
+			Head over to the main
 			<a href="https://www.crazygames.com/">CrazyGames</a>
 			website, find a game, and then copy the game slug in the URL (e.g.,
 			crazy-flips-3d) and put it below.
 			<a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
 		</p>
+        <a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
 		<input type="text" placeholder="crazy-flips-3d" id="gameSlugInput" /> <button onclick="loadGameFromInput()">Play Game</button>
 		<div class="loader" id="bookmarklet">
-			<p>CTo ahve an easy way to come back here, click and drag the button below into your bookmarks bar and click it when you are on the real CrazyGames site.</p>
+			<p><i>To have an easy way to updgrade your cringe gaming experience, click and drag the lil guy below into your bookmarks bar and click it when you are on the terrible CrazyGames site!</i></p>
 			<a href="javascript:(function () {let url = window.location.href; let match = url.match(/crazygames\.com\/game\/([^\/]+)/); if (match && match[1]) {let gameCode = match[1]; let newUrl = `https://sanegames.vercel.app/?game=${gameCode}`; window.location.replace(newUrl);} else {alert('You are not on CrazyGames');}})();" class="bookmarklet-button" draggable="true">
-				Drag Me!
+				💪😎
 			</a>
 		</div>
 	</div>
