@@ -1,359 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>SaneGames</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/png" href="assets/favicon.png">
+<head>
+	<title>SaneGames</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta name="description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
-    <meta name="keywords" content="games, free games, online games, no ads, crazygames, client, wrapper, open source" />
-    <meta name="author" content="SaneGames (Elouan Grimm)" />
+	<link rel="icon" type="image/png" href="assets/favicon.png">
 
-    <meta property="og:title" content="SaneGames" />
-    <meta property="og:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
-    <meta property="og:image" content="assets/thumbnail.png" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://sanegames.vercel.app" />
+	<meta name="description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+	<meta name="keywords" content="games, free games, online games, no ads, crazygames, client, wrapper, open source" />
+	<meta name="author" content="SaneGames (Elouan Grimm)" />
 
-    <style>
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        overflow: hidden;
-        background-color: #1e293b;
-        color: white;
-        font-family: 'Arial', sans-serif;
-      }
+	<meta property="og:title" content="SaneGames" />
+	<meta property="og:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+	<meta property="og:image" content="assets/thumbnail.png" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://sanegames.vercel.app" />
 
-      .loader {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+	<style>
+		html,
+		body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			overflow: hidden;
+			background-color: #1e293b;
+			color: white;
+			font-family: 'Arial', sans-serif;
+		}
 
-      .loader > * {
-        margin: 0.5em 0;
-      }
+		.loader {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
 
-      input[type='text'] {
-        padding: 0.75em;
-        border: none;
-        border-radius: 0.5em;
-        font-size: 1em;
-        background-color: #334155;
-        color: white;
-        margin-bottom: 1em;
-      }
+		.loader>* {
+			margin: 0.5em 0;
+		}
 
-      button {
-        padding: 0.75em 1.5em;
-        border: none;
-        border-radius: 0.5em;
-        background-color: #6842FF;
-        color: white;
-        font-size: 1em;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
+		input[type='text'] {
+			padding: 0.75em;
+			border: none;
+			border-radius: 0.5em;
+			font-size: 1em;
+			background-color: #334155;
+			color: white;
+			margin-bottom: 1em;
+		}
 
-      button:hover {
-        background-color: #6842ff;
-      }
+		button {
+			padding: 0.75em 1.5em;
+			border: none;
+			border-radius: 0.5em;
+			background-color: #6842FF;
+			color: white;
+			font-size: 1em;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
 
-      .css-inwm4l,
-      .css-13yk3gq,
-      #qr-modal-toggle-button,
-      a[target="_blank"] {
-        display: none !important;
-      }
+		button:hover {
+			background-color: #6842ff;
+		}
 
-      #gameInput {
-        display: none;
-      }
+		.css-inwm4l,
+		.css-13yk3gq,
+		#qr-modal-toggle-button,
+		a[target="_blank"] {
+			display: none !important;
+		}
 
-      #gameInput.active {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+		#gameInput {
+			display: none;
+		}
 
-      a {
-        color: #a993ff;
-        cursor: pointer
-      }
+		#gameInput.active {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
 
-      #recommendationsPopup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #334155;
-        color: white;
-        padding: 20px;
-        border-radius: 0.5em;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        width: 80%;
-        max-width: 600px;
-      }
+		a {
+			color: #a993ff;
+			cursor: pointer
+		}
 
-      #recommendationsPopup h2 {
-        margin-top: 0;
-      }
+		#recommendationsPopup {
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: #334155;
+			color: white;
+			padding: 20px;
+			border-radius: 0.5em;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+			z-index: 1000;
+			width: 80%;
+			max-width: 600px;
+		}
 
-      #recommendationsPopup ul {
-        list-style-type: none;
-        padding: 0;
-      }
+		#recommendationsPopup h2 {
+			margin-top: 0;
+		}
 
-      #recommendationsPopup li {
-        margin-bottom: 0.5em;
-      }
+		#recommendationsPopup ul {
+			list-style-type: none;
+			padding: 0;
+		}
 
-      #recommendationsPopup a {
-        color: #a993ff;
-        text-decoration: none;
-      }
+		#recommendationsPopup li {
+			margin-bottom: 0.5em;
+		}
 
-      #recommendationsPopup a:hover {
-        text-decoration: underline;
-      }
+		#recommendationsPopup a {
+			color: #a993ff;
+			text-decoration: none;
+		}
 
-      #recommendationsPopup.active {
-        display: block;
-      }
-      .bookmarklet-button {
-        display: inline-block;
-        padding: 10px 15px;
-        background-color: #6842FF;
-        color: white;
-        font-size: 1em;
-        text-decoration: none;
-        border-radius: 5px;
-        cursor: grab;
-    }
+		#recommendationsPopup a:hover {
+			text-decoration: underline;
+		}
 
-    .bookmarklet-button:active {
-        cursor: grabbing;
-    }
-    </style>
-  </head>
-  <body>
-    <div class="loader" id="loader">Loading…</div>
+		#recommendationsPopup.active {
+			display: block;
+		}
 
-    <div class="loader" id="gameInput">
-      <img src="assets/logo.png" alt="SaneGames Logo" style="width:100px; display:block; margin: 0 auto;">
-      <h1>Welcome to <b>SaneGames.</b></h1>
-      <h3>
-        A better client for all CrazyGames games, with no ads or annoying UI.
-      </h3>
-      <p>
-        You have not set a slug! So please proceed to the main
-        <a href="https://www.crazygames.com/">CrazyGames</a>
-        website, find a game, and then copy the game slug in the URL (e.g.,
-        crazy-flips-3d) and put it below.
-        <a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
-      </p>
-      <input type="text" placeholder="crazy-flips-3d" id="gameSlugInput" /> <button onclick="loadGameFromInput()">Play Game</button>
-      <div id="bookmarklet">
-        <p>CTo ahve an easy way to come back here, click and drag the button below into your bookmarks bar and click it when you are on the real CrazyGames site.</p>
-        <a href="(function () {let url = window.location.href; let match = url.match(/crazygames\.com\/game\/([^\/]+)/); if (match && match[1]) {let gameCode = match[1]; let newUrl = `https://sanegames.vercel.app/?game=${gameCode}`; window.location.replace(newUrl);} else {alert('You are not on CrazyGames');}})();" 
-            class="bookmarklet-button" 
-            draggable="true">
-            Drag Me!
-        </a>
-      </div>
-    </div>
+		.bookmarklet-button {
+			display: inline-block;
+			padding: 10px 15px;
+			background-color: #6842FF;
+			color: white;
+			font-size: 1em;
+			text-decoration: none;
+			border-radius: 5px;
+			cursor: grab;
+		}
 
-    <div id="recommendationsPopup">
-      <h2>Game Recommendations</h2>
-      <p>Below are a few half-decent games.</p>
-      <ul>
-        <li>
-          <a
-            href="?game=ragdoll-archers"
-            onclick="closeRecommendations()"
-            >Ragdoll Archers</a
-          >
-        </li>
-        <li>
-          <a
-            href="?game=havendock"
-            onclick="closeRecommendations()"
-            >Havendock</a
-          >
-        </li>
-        <li>
-          <a
-            href="?game=crazy-flips-3d"
-            onclick="closeRecommendations()"
-            >Crazy Flips 3D</a
-          >
-        </li>
-      </ul>
+		.bookmarklet-button:active {
+			cursor: grabbing;
+		}
+	</style>
+</head>
 
-      <h3 onclick="closeRecommendations()" style="cursor: pointer; color: #e0d9ff;">Close</h3>
-    </div>
+<body>
+	<div class="loader" id="loader">Loading…</div>
 
-    <script>
-      const adBlockList = [
-        'doubleclick.net',
-        'adservice.google.com',
-        'googlesyndication.com',
-        'ads.crazygames.com',
-        'pagead2.googlesyndication.com',
-        'securepubads.g.doubleclick.net',
-        'cpx.to',
-        'adnxs.com',
-        'googletagmanager.com',
-        'imasdk.googleapis.com',
-      ];
+	<div class="loader" id="gameInput">
+		<img src="assets/logo.png" alt="SaneGames Logo" style="width:100px; display:block; margin: 0 auto;">
+		<h1>Welcome to <b>SaneGames.</b></h1>
+		<h3>
+			A better client for all CrazyGames games, with no ads or annoying UI.
+		</h3>
+		<p>
+			You have not set a slug! So please proceed to the main
+			<a href="https://www.crazygames.com/">CrazyGames</a>
+			website, find a game, and then copy the game slug in the URL (e.g.,
+			crazy-flips-3d) and put it below.
+			<a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
+		</p>
+		<input type="text" placeholder="crazy-flips-3d" id="gameSlugInput" /> <button onclick="loadGameFromInput()">Play Game</button>
+		<div class="loader" id="bookmarklet">
+			<p>CTo ahve an easy way to come back here, click and drag the button below into your bookmarks bar and click it when you are on the real CrazyGames site.</p>
+			<a href="javascript:(function () {let url = window.location.href; let match = url.match(/crazygames\.com\/game\/([^\/]+)/); if (match && match[1]) {let gameCode = match[1]; let newUrl = `https://sanegames.vercel.app/?game=${gameCode}`; window.location.replace(newUrl);} else {alert('You are not on CrazyGames');}})();" class="bookmarklet-button" draggable="true">
+				Drag Me!
+			</a>
+		</div>
+	</div>
 
-      (function blockAds() {
-        let originalFetch = window.fetch;
-        window.fetch = async function (...args) {
-            if (adBlockList.some(domain => args[0].includes(domain))) {
-            console.warn('Intercepted ad request:', args[0]);
-            return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
-            }
-            return originalFetch(...args);
-        };
+	<div id="recommendationsPopup">
+		<h2>Game Recommendations</h2>
+		<p>Below are a few half-decent games.</p>
+		<ul>
+			<li>
+				<a href="?game=ragdoll-archers" onclick="closeRecommendations()">Ragdoll Archers</a>
+			</li>
+			<li>
+				<a href="?game=havendock" onclick="closeRecommendations()">Havendock</a>
+			</li>
+			<li>
+				<a href="?game=crazy-flips-3d" onclick="closeRecommendations()">Crazy Flips 3D</a>
+			</li>
+		</ul>
 
-        let originalOpen = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function (method, url) {
-            if (adBlockList.some(domain => url.includes(domain))) {
-            console.warn('Intercepted ad request:', url);
-            this.send = () => {};
-            return;
-            }
-            return originalOpen.apply(this, arguments);
-        };
-        })();
+		<h3 onclick="closeRecommendations()" style="cursor: pointer; color: #e0d9ff;">Close</h3>
+	</div>
 
-      function removeAds() {
-        document.querySelectorAll('iframe, script, div').forEach(el => {
-          if (adBlockList.some(domain => el.src && el.src.includes(domain))) {
-            el.remove();
-            console.warn('Removed ad element:', el);
-          }
-        });
-      }
+	<script>
+		const adBlockList = [
+			'doubleclick.net',
+			'adservice.google.com',
+			'googlesyndication.com',
+			'ads.crazygames.com',
+			'pagead2.googlesyndication.com',
+			'securepubads.g.doubleclick.net',
+			'cpx.to',
+			'adnxs.com',
+			'googletagmanager.com',
+			'imasdk.googleapis.com',
+		];
 
-      const observer = new MutationObserver(mutations => {
-        mutations.forEach(() => removeAds());
-      });
+		(function blockAds() {
+			let originalFetch = window.fetch;
+			window.fetch = async function(...args) {
+				if (adBlockList.some(domain => args[0].includes(domain))) {
+					console.warn('Intercepted ad request:', args[0]);
+					return new Response('{}', {
+						status: 200,
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					});
+				}
+				return originalFetch(...args);
+			};
 
-      observer.observe(document.body, { childList: true, subtree: true });
+			let originalOpen = XMLHttpRequest.prototype.open;
+			XMLHttpRequest.prototype.open = function(method, url) {
+				if (adBlockList.some(domain => url.includes(domain))) {
+					console.warn('Intercepted ad request:', url);
+					this.send = () => {};
+					return;
+				}
+				return originalOpen.apply(this, arguments);
+			};
+		})();
 
-      async function fetchWithTimeout(url, timeout = 3000) {
-        return Promise.race([
-          fetch(url),
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), timeout),
-          ),
-        ]);
-      }
+		function removeAds() {
+			document.querySelectorAll('iframe, script, div').forEach(el => {
+				if (adBlockList.some(domain => el.src && el.src.includes(domain))) {
+					el.remove();
+					console.warn('Removed ad element:', el);
+				}
+			});
+		}
 
-      async function fetchGameConfig(gameSlug) {
-        try {
-          let response = await fetchWithTimeout(
-            `https://opencors.netlify.app/.netlify/functions/main?url=${encodeURIComponent(
+		const observer = new MutationObserver(mutations => {
+			mutations.forEach(() => removeAds());
+		});
+
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true
+		});
+
+		async function fetchWithTimeout(url, timeout = 3000) {
+			return Promise.race([
+				fetch(url),
+				new Promise((_, reject) =>
+					setTimeout(() => reject(new Error('Timeout')), timeout),
+				),
+			]);
+		}
+
+		async function fetchGameConfig(gameSlug) {
+			try {
+				let response = await fetchWithTimeout(
+					`https://opencors.netlify.app/.netlify/functions/main?url=${encodeURIComponent(
               `https://games.crazygames.com/en_US/${gameSlug}/index.html`,
             )}`,
-          );
-          let text = await response.text();
-          let match = text.match(/var options = (\{[\s\S]*?\});/);
-          return match ? JSON.parse(match[1]) : null;
-        } catch (error) {
-          console.warn('Primary fetch failed, attempting fallback:', error);
-          try {
-            let response = await fetchWithTimeout(
-              `https://corsproxy.io/?key=d6168cb0&url=${encodeURIComponent(
+				);
+				let text = await response.text();
+				let match = text.match(/var options = (\{[\s\S]*?\});/);
+				return match ? JSON.parse(match[1]) : null;
+			} catch (error) {
+				console.warn('Primary fetch failed, attempting fallback:', error);
+				try {
+					let response = await fetchWithTimeout(
+						`https://corsproxy.io/?key=d6168cb0&url=${encodeURIComponent(
                 `https://games.crazygames.com/en_US/${gameSlug}/index.html`,
               )}`,
-            );
-            let text = await response.text();
-            let match = text.match(/var options = (\{[\s\S]*?\});/);
-            return match ? JSON.parse(match[1]) : null;
-          } catch (error) {
-            console.error('Fallback fetch failed:', error);
-            return null;
-          }
-        }
-      }
+					);
+					let text = await response.text();
+					let match = text.match(/var options = (\{[\s\S]*?\});/);
+					return match ? JSON.parse(match[1]) : null;
+				} catch (error) {
+					console.error('Fallback fetch failed:', error);
+					return null;
+				}
+			}
+		}
 
-      async function loadGame() {
-        let params = new URLSearchParams(window.location.search);
-        let gameSlug = params.get('game');
-        let loader = document.getElementById('loader');
-        let gameInput = document.getElementById('gameInput');
+		async function loadGame() {
+			let params = new URLSearchParams(window.location.search);
+			let gameSlug = params.get('game');
+			let loader = document.getElementById('loader');
+			let gameInput = document.getElementById('gameInput');
 
-        if (!gameSlug) {
-          loader.style.display = 'none';
-          gameInput.classList.add('active');
-          return;
-        }
+			if (!gameSlug) {
+				loader.style.display = 'none';
+				gameInput.classList.add('active');
+				return;
+			}
 
-        let options = await fetchGameConfig(gameSlug);
-        if (!options) {
-          loader.textContent =
-            "Loading failed. Either there's some error, or, most likely, you mistyped the slug.";
-          return;
-        }
+			let options = await fetchGameConfig(gameSlug);
+			if (!options) {
+				loader.textContent =
+					"Loading failed. Either there's some error, or, most likely, you mistyped the slug.";
+				return;
+			}
 
-        document.title = options.gameName + " | SaneGames" || "SaneGames";
+			document.title = options.gameName + " | SaneGames" || "SaneGames";
 
-        let script = document.createElement('script');
-        script.src = 'https://builds.crazygames.com/gameframe/v1/bundle.js';
-        script.onload = () => {
-          if (window.Crazygames) {
-            Crazygames.load(options).then(() => {
-              loader.remove();
-              gameInput.remove();
-            });
-          } else {
-            console.error('Crazygames SDK failed to load.');
-          }
-        };
-        document.head.appendChild(script);
-      }
+			let script = document.createElement('script');
+			script.src = 'https://builds.crazygames.com/gameframe/v1/bundle.js';
+			script.onload = () => {
+				if (window.Crazygames) {
+					Crazygames.load(options).then(() => {
+						loader.remove();
+						gameInput.remove();
+					});
+				} else {
+					console.error('Crazygames SDK failed to load.');
+				}
+			};
+			document.head.appendChild(script);
+		}
 
-      function loadGameFromInput() {
-        let gameSlug = document.getElementById('gameSlugInput').value;
-        if (gameSlug) {
-          let newUrl = window.location.href.split('?')[0] + '?game=' + gameSlug;
-          window.location.href = newUrl;
-        }
-      }
+		function loadGameFromInput() {
+			let gameSlug = document.getElementById('gameSlugInput').value;
+			if (gameSlug) {
+				let newUrl = window.location.href.split('?')[0] + '?game=' + gameSlug;
+				window.location.href = newUrl;
+			}
+		}
 
-      function recommendations() {
-        const popup = document.getElementById('recommendationsPopup');
-        popup.classList.add('active');
-      }
+		function recommendations() {
+			const popup = document.getElementById('recommendationsPopup');
+			popup.classList.add('active');
+		}
 
-      function closeRecommendations() {
-        const popup = document.getElementById('recommendationsPopup');
-        popup.classList.remove('active');
-      }
+		function closeRecommendations() {
+			const popup = document.getElementById('recommendationsPopup');
+			popup.classList.remove('active');
+		}
 
-      window.onclick = function (event) {
-        const popup = document.getElementById('recommendationsPopup');
-        if (
-          event.target == popup &&
-          popup.classList.contains('active') === true
-        ) {
-          closeRecommendations();
-        }
-      };
+		window.onclick = function(event) {
+			const popup = document.getElementById('recommendationsPopup');
+			if (
+				event.target == popup &&
+				popup.classList.contains('active') === true
+			) {
+				closeRecommendations();
+			}
+		};
 
-      loadGame();
-    </script>
-  </body>
+		loadGame();
+	</script>
+</body>
+
 </html>
