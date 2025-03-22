@@ -186,22 +186,23 @@
       (function blockAds() {
         let originalFetch = window.fetch;
         window.fetch = async function (...args) {
-          if (adBlockList.some(domain => args[0].includes(domain))) {
-            console.warn('Blocked ad request:', args[0]);
-            return new Response(null, { status: 403, statusText: 'Blocked' });
-          }
-          return originalFetch(...args);
+            if (adBlockList.some(domain => args[0].includes(domain))) {
+            console.warn('Intercepted ad request:', args[0]);
+            return new Response('{}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+            }
+            return originalFetch(...args);
         };
 
         let originalOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function (method, url) {
-          if (adBlockList.some(domain => url.includes(domain))) {
-            console.warn('Blocked ad request:', url);
+            if (adBlockList.some(domain => url.includes(domain))) {
+            console.warn('Intercepted ad request:', url);
+            this.send = () => {};
             return;
-          }
-          return originalOpen.apply(this, arguments);
+            }
+            return originalOpen.apply(this, arguments);
         };
-      })();
+        })();
 
       function removeAds() {
         document.querySelectorAll('iframe, script, div').forEach(el => {
