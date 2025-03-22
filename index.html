@@ -275,6 +275,8 @@
           return;
         }
 
+        document.title = options.title + " | SaneGames" || "SaneGames";
+
         let script = document.createElement('script');
         script.src = 'https://builds.crazygames.com/gameframe/v1/bundle.js';
         script.onload = () => {
