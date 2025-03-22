@@ -1,0 +1,126 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background-color: #1e293b;
+    color: white;
+    font-family: 'Arial', sans-serif;
+}
+
+.loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loader>* {
+    margin: 0.5em 0;
+}
+
+input[type='text'] {
+    padding: 0.75em;
+    border: none;
+    border-radius: 0.5em;
+    font-size: 1em;
+    background-color: #334155;
+    color: white;
+    margin-bottom: 1em;
+}
+
+button {
+    padding: 0.75em 1.5em;
+    border: none;
+    border-radius: 0.5em;
+    background-color: #6842FF;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #6842ff;
+}
+
+.css-inwm4l,
+.css-13yk3gq,
+#qr-modal-toggle-button,
+a[target="_blank"] {
+    display: none !important;
+}
+
+#gameInput {
+    display: none;
+}
+
+#gameInput.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+a {
+    color: #a993ff;
+    cursor: pointer
+}
+
+#recommendationsPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #334155;
+    color: white;
+    padding: 20px;
+    border-radius: 0.5em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: 80%;
+    max-width: 600px;
+}
+
+#recommendationsPopup h2 {
+    margin-top: 0;
+}
+
+#recommendationsPopup ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#recommendationsPopup li {
+    margin-bottom: 0.5em;
+}
+
+#recommendationsPopup a {
+    color: #a993ff;
+    text-decoration: none;
+}
+
+#recommendationsPopup a:hover {
+    text-decoration: underline;
+}
+
+#recommendationsPopup.active {
+    display: block;
+}
+
+.bookmarklet-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #6842FF;
+    color: white;
+    font-size: 1em;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: grab;
+}
+
+.bookmarklet-button:active {
+    cursor: grabbing;
+}
