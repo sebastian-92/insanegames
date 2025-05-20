@@ -95,7 +95,7 @@ const adBlockList = [
 function removeAdElements() {
     if (typeof document === "undefined") return;
 
-    const muiButtonSelector = ".MuiButtonBase-root.css-b48h4t";
+    const muiButtonSelector = "MuiButtonBase-root.css-b48h4t";
 
     const selectorsToRemove = [
         muiButtonSelector,
