@@ -299,14 +299,10 @@ async function loadGame() {
 
     if (options.url) {
         const originalGameHtmlUrl = options.url;
-
-        // Your Netlify function URL will be: https://your-netlify-site-name.netlify.app/.netlify/functions/proxy-game
-        // Replace 'your-netlify-site-name' with your actual Netlify site name.
-        // If testing locally with `netlify dev`, it's usually http://localhost:8888/.netlify/functions/proxy-game
         const proxyBaseUrl =
             window.location.hostname === "localhost"
                 ? "http://localhost:8888/.netlify/functions/proxy-game"
-                : "https://your-netlify-site-name.netlify.app/.netlify/functions/proxy-game";
+                : "https://sanegames.netlify.app/.netlify/functions/proxy-game";
 
         options.url = `${proxyBaseUrl}?target=${encodeURIComponent(
             originalGameHtmlUrl
