@@ -297,6 +297,39 @@ async function loadGame() {
 
     document.title = (options.gameName || gameSlug) + " | SaneGames";
 
+    if (options.url) {
+        const originalGameHtmlUrl = options.url;
+
+        // Your Netlify function URL will be: https://your-netlify-site-name.netlify.app/.netlify/functions/proxy-game
+        // Replace 'your-netlify-site-name' with your actual Netlify site name.
+        // If testing locally with `netlify dev`, it's usually http://localhost:8888/.netlify/functions/proxy-game
+        const proxyBaseUrl =
+            window.location.hostname === "localhost"
+                ? "http://localhost:8888/.netlify/functions/proxy-game"
+                : "https://your-netlify-site-name.netlify.app/.netlify/functions/proxy-game";
+
+        options.url = `${proxyBaseUrl}?target=${encodeURIComponent(
+            originalGameHtmlUrl
+        )}`;
+        console.log(
+            `SaneGames: Rewrote game HTML URL to use proxy: ${options.url}`
+        );
+    } else {
+        console.warn(
+            "SaneGames: options.url not found in game config. Cannot proxy game HTML."
+        );
+        if (loader) {
+            loader.textContent =
+                "Game configuration is missing the main game URL. Cannot load.";
+            loader.style.display = "flex";
+        }
+        if (gameInput) {
+            gameInput.classList.add("active");
+            gameInput.style.display = "flex";
+        }
+        return;
+    }
+
     let sdkScriptUrl = "https://builds.crazygames.com/gameframe/v1/bundle.js";
     let script = document.createElement("script");
     script.src = sdkScriptUrl;
