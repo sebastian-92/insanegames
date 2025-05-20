@@ -92,29 +92,51 @@ const adBlockList = [
     }
 })();
 
-function removeAdElements() {
+// Renamed function to reflect its broader purpose
+function applyUiModifications() {
     if (typeof document === "undefined") return;
 
-    const muiButtonSelector = "MuiButtonBase-root.css-b48h4t";
+    // --- Specific MUI Button Text Change (for .css-1fs4034) ---
+    const buttonToModifyTextSelector = '.MuiButtonBase-root.css-1fs4034'; // Corrected with leading dot
+    document.querySelectorAll(buttonToModifyTextSelector).forEach(button => {
+        if (button instanceof HTMLElement) {
+            const newText = "Continue (CLICK HERE)";
+            if (button.textContent !== newText) {
+                let textContainer = button.querySelector('.MuiButton-label, .MuiButton-label-root, span');
+                if (textContainer) {
+                    textContainer.textContent = newText;
+                } else {
+                    button.textContent = newText;
+                }
+                console.log(`SaneGames: Changed text of button matching "${buttonToModifyTextSelector}"`);
+            }
+        }
+    });
+
+    // --- Selector for the MUI button to remove (for .css-b48h4t) ---
+    const muiButtonToRemoveSelector = ".MuiButtonBase-root.css-b48h4t"; // Corrected with leading dot
 
     const selectorsToRemove = [
-        muiButtonSelector,
+        muiButtonToRemoveSelector,
         "#crazygames-ad",
         ".ad-container",
     ];
 
     selectorsToRemove.forEach((selector) => {
         document.querySelectorAll(selector).forEach((el) => {
-            console.warn(
-                `SaneGames: Removed element matching selector "${selector}":`,
-                el.tagName,
-                el.id,
-                el.className
-            );
-            el.remove();
+            if (el.parentNode) { // Check if parentNode exists before removing
+                console.warn(
+                    `SaneGames: Removed element matching selector "${selector}":`,
+                    el.tagName,
+                    el.id,
+                    el.className
+                );
+                el.remove();
+            }
         });
     });
 
+    // --- Broader ad-blocking/element removal logic ---
     document
         .querySelectorAll(
             "iframe, script, div, img, ins, video, style, button, a"
@@ -126,17 +148,19 @@ function removeAdElements() {
                 el.className ||
                 (el.classList ? Array.from(el.classList).join(" ") : "");
 
-            let isAdElement = false;
+            let isPotentialAdOrAnnoyance = false;
 
-            if (el.matches && el.matches(muiButtonSelector)) {
-                isAdElement = true;
+            // Ensure we don't try to re-process elements we've specifically handled or intend to keep
+            if (el.matches && (el.matches(buttonToModifyTextSelector) || el.matches(muiButtonToRemoveSelector))) {
+                // Already handled by specific logic above (one is text-changed, other is removed)
+                // No further action needed for these specific selectors in this generic loop
             }
             else if (
                 elSrc &&
                 typeof elSrc === "string" &&
                 adBlockList.some((domain) => elSrc.includes(domain))
             ) {
-                isAdElement = true;
+                isPotentialAdOrAnnoyance = true;
             }
             else if (
                 adBlockList.some((keyword) => {
@@ -149,7 +173,7 @@ function removeAdElements() {
                     );
                 })
             ) {
-                isAdElement = true;
+                isPotentialAdOrAnnoyance = true;
             }
             else {
                 const commonAdKeywords = [
@@ -169,13 +193,13 @@ function removeAdElements() {
                                 elClass.toLowerCase().includes(keyword))
                     )
                 ) {
-                    isAdElement = true;
+                    isPotentialAdOrAnnoyance = true;
                 }
             }
 
-            if (isAdElement && el.parentNode) {
+            if (isPotentialAdOrAnnoyance && el.parentNode) {
                 console.warn(
-                    "SaneGames: Removed potential ad/annoying element:",
+                    "SaneGames: Removed potential ad/annoying element (generic):",
                     el.tagName,
                     el.id,
                     el.className,
@@ -188,31 +212,26 @@ function removeAdElements() {
 
 if (typeof window !== "undefined" && typeof MutationObserver !== "undefined") {
     const observer = new MutationObserver((mutations) => {
-        let needsRemoval = false;
-        for (const mutation of mutations) {
-            if (mutation.addedNodes.length > 0) {
-                needsRemoval = true;
-                break;
-            }
-        }
-        if (needsRemoval) {
-            removeAdElements();
-        }
+        // No need to check mutations in detail if applyUiModifications handles all cases
+        // Just call it to re-evaluate the DOM.
+        // For performance, you might add checks if only specific mutations trigger it,
+        // but for simplicity and robustness, calling it on any observed change is fine.
+        applyUiModifications();
     });
 
     const startObserver = () => {
         if (document.body) {
-            removeAdElements(); // Initial run
+            applyUiModifications(); // Initial run
             observer.observe(document.body, {
                 childList: true,
-                subtree: true,
+                subtree: true
             });
         } else {
             document.addEventListener("DOMContentLoaded", () => {
-                removeAdElements(); // Initial run
+                applyUiModifications(); // Initial run
                 observer.observe(document.body, {
                     childList: true,
-                    subtree: true,
+                    subtree: true
                 });
             });
         }
@@ -365,7 +384,6 @@ async function loadGame() {
 
                     if (error && error.message) {
                         errorMessage += `Error: ${error.message}. `;
-                        // Check for messages indicative of X-Frame-Options or similar embedding restrictions
                         if (
                             error.message
                                 .toLowerCase()
@@ -380,7 +398,6 @@ async function loadGame() {
                                 .toLowerCase()
                                 .includes("frame-ancestors")
                         ) {
-                            // Check for CSP frame-ancestors too
                             errorMessage +=
                                 "This game's security settings (like X-Frame-Options or Content-Security-Policy) likely prevent it from being embedded here. Some games cannot be played on SaneGames due to these restrictions. ";
                         }
