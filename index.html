@@ -1,110 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>SaneGames</title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="icon" type="image/png" href="assets/favicon.png" />
+<head>
+    <title>SaneGames</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta
-            name="description"
-            content="A better client for all CrazyGames games, with no ads or annoying UI."
-        />
-        <meta
-            name="keywords"
-            content="games, free games, online games, no ads, crazygames, client, wrapper, open source"
-        />
-        <meta name="author" content="SaneGames (Elouan Grimm)" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
 
-        <meta property="og:title" content="SaneGames" />
-        <meta
-            property="og:description"
-            content="A better client for all CrazyGames games, with no ads or annoying UI."
-        />
-        <meta property="og:image" content="assets/thumbnail.png" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://sanegamz.github.io" />
+    <meta name="description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+    <meta name="keywords" content="games, free games, online games, no ads, crazygames, client, wrapper, open source" />
+    <meta name="author" content="SaneGames (Elouan Grimm)" />
 
-        <link rel="stylesheet" href="style.css" />
-    </head>
+    <meta property="og:title" content="SaneGames" />
+    <meta property="og:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
+    <meta property="og:image" content="assets/thumbnail.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sanegamz.github.io" />
 
-    <body>
-        <div class="loader" id="loader">Loading…</div>
+    <link rel="stylesheet" href="style.css" />
+</head>
 
-        <div class="loader" id="gameInput">
-            <!-- This div initially uses .loader styles for centering -->
-            <img
-                src="assets/logo.png"
-                alt="SaneGames Logo"
-                style="width:100px; display:block; margin: 0 auto;"
-            />
-            <h1>Welcome to <b>SaneGames.</b></h1>
-            <h3>
-                A better client for all CrazyGames games, with no ads or
-                annoying UI.
-            </h3>
-            <br />
+<body>
+    <div class="loader" id="loader">Loading…</div>
 
-            <h4>Option 1: Use the Bookmarklet (Recommended)</h4>
-            <p>
-                To easily upgrade your gaming experience, drag the button below
-                to your bookmarks bar. Then, when you're on a CrazyGames game
-                page, just click the bookmarklet!
-            </p>
-            <a
-                onclick="alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!')"
-                href="javascript:(function(){let u=window.location.href,m=u.match(/crazygames\.(?:com|id|dev|co\.uk|net|org|[a-z]{2})\/game\/([^\/?#]+)/);if(m&&m[1]){window.location.href=`https://sanegamz.github.io/?game=${m[1]}`}else{alert('Please navigate to a CrazyGames game page first, then click the bookmarklet.')}})();"
-                class="bookmarklet-button"
-                draggable="true"
-            >
-                💪😎 Play Sane
-            </a>
-            <p>
-                Now, head over to the main
-                <a href="https://www.crazygames.com/" target="_blank"
-                    >CrazyGames</a
-                >
-                website, find a game, then click your new bookmarklet! It's that
-                easy!
-            </p>
-            <br />
+    <div class="loader" id="gameInput">
+        <img src="assets/logo.png" alt="SaneGames Logo" style="width:100px; display:block; margin: 0 auto;" />
+        <h1>Welcome to <b>SaneGames.</b></h1>
+        <h3>
+            A better client for all CrazyGames games, with no ads or
+            annoying UI.
+        </h3>
+        <br />
 
-            <h4>Option 2: Enter Game Slug Manually</h4>
-            <p>
-                Alternatively, find a game on
-                <a href="https://www.crazygames.com/" target="_blank"
-                    >CrazyGames</a
-                >. The URL in your address bar will look something like
-                <br /><code>https://www.crazygames.com/game/your-game-slug</code
-                >. <br />Copy the <code>your-game-slug</code> part and paste it
-                below.
-            </p>
-            <input
-                type="text"
-                placeholder="e.g., crazy-flips-3d"
-                id="gameSlugInput"
-            />
-            <button onclick="loadGameFromInput()">Play Game</button>
-            <br />
-            <!--
+        <h4>Option 1: Use the Bookmarklet (Recommended)</h4>
+        <p>
+            To easily upgrade your gaming experience, drag the button below
+            to your bookmarks bar.
+        </p>
+        <p>
+            Then, when you're on a CrazyGames game
+            page, just click the bookmarklet!
+        </p>
+        <a href="javascript:(function(){const s='sanegames.elouan.xyz',h=window.location.hostname,f=window.location.href;if(h===s){alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!')}else{const r=/crazygames\.(?:com|id|dev|co\.uk|net|org|[a-z]{2})\/game\/([^\/?#]+)/,m=f.match(r);if(m&&m[1]){const g=m[1],n=`https://sanegames.elouan.xyz/?game=${g}`;window.location.href=n}else{alert('Please navigate to a CrazyGames game page first, then click the bookmarklet.')}}})();"
+            class="bookmarklet-button" draggable="true"
+            onclick="event.preventDefault(); alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!');">
+            Play Sane
+        </a>
+        <p>
+            Now, head over to the main
+            <a href="https://www.crazygames.com/" target="_blank">CrazyGames</a>
+            website, find a game, then click your new bookmarklet! It's that
+            easy!
+        </p>
+        <br />
+
+        <h4>Option 2: Enter Game Slug Manually</h4>
+        <p>
+            Alternatively, find a game on
+            <a href="https://www.crazygames.com/">CrazyGames</a>. The URL in your address bar will look
+            something like
+            <br /><code>https://www.crazygames.com/game/your-game-slug</code>. <br />Copy the
+            <code>your-game-slug</code> part and paste it
+            below.
+        </p>
+        <input type="text" placeholder="e.g., crazy-flips-3d" id="gameSlugInput" />
+        <button onclick="loadGameFromInput()">Play Game</button>
+        <br />
+        <!--
 		<a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
 		-->
-            <br />
-            <br />
-            <p>
-                <i
-                    >PS: SaneGames is
-                    <a
-                        href="https://github.com/sanegamz/sanegamz.github.io"
-                        target="_blank"
-                        >Open Source</a
-                    >!</i
-                >
-            </p>
-        </div>
+        <br />
+        <br />
+        <p>
+            <i>PS: SaneGames is
+                <a href="https://github.com/sanegamz/sanegamz.github.io">Open Source</a>!</i>
+        </p>
+    </div>
 
-        <!--
+    <!--
 	<div id="recommendationsPopup">
 		<h2>Game Recommendations</h2>
 		<p>Below are a few half-decent games.</p>
@@ -124,6 +98,7 @@
 	</div>
 	-->
 
-        <script src="main.js"></script>
-    </body>
+    <script src="main.js"></script>
+</body>
+
 </html>
