@@ -132,8 +132,6 @@ a {
     /* Elevate slightly from the absolute bottom */
     left: 50%;
     /* Center horizontally */
-    transform: translateX(-50%);
-    /* Fine-tune centering */
     width: 90%;
     /* Don't take full width on larger screens */
     max-width: 550px;
