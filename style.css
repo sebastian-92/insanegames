@@ -124,3 +124,78 @@ a {
 .bookmarklet-button:active {
     cursor: grabbing;
 }
+
+#cookieConsentBanner {
+    display: none;
+    /* Initially hidden by JavaScript if cookie exists */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2c3e50;
+    /* Darker, more modern blue-grey */
+    color: white;
+    padding: 20px;
+    z-index: 100000;
+    /* Very high z-index */
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    /* Or your site's font */
+    font-size: 15px;
+    line-height: 1.6;
+    box-sizing: border-box;
+    /* Important for padding and width */
+}
+
+#cookieConsentBanner p {
+    margin: 0 auto 15px auto;
+    /* Center paragraph and add bottom margin */
+    max-width: 900px;
+    /* Prevent text from becoming too wide on large screens */
+}
+
+#cookieConsentBanner a {
+    color: #3498db;
+    /* Brighter blue for links */
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+#cookieConsentBanner a:hover {
+    color: #5dade2;
+}
+
+#cookieConsentBanner button {
+    background-color: #3498db;
+    /* Primary button color */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+#cookieConsentBanner button:hover {
+    background-color: #2980b9;
+}
+
+#cookieConsentBanner button#cookieDeclineButton {
+    /* Specific style for decline */
+    background-color: #7f8c8d;
+    /* Grey for decline/secondary */
+}
+
+#cookieConsentBanner button#cookieDeclineButton:hover {
+    background-color: #95a5a6;
+}
+
+/* If banner is visible, add padding to the bottom of the body to prevent content overlap */
+body.cookie-banner-visible {
+    padding-bottom: 150px;
+    /* Adjust this based on your banner's final height */
+}
