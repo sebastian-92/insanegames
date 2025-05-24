@@ -23,112 +23,7 @@
     </script>
 
     <script defer>
-        // PostHog loader snippet (if not already loaded elsewhere higher up)
-        // Ensure this is present if your consent script relies on `posthog` object.
-        // !function(t,e){ ... }(document, window.posthog || []);
-
-        (function () {
-            const COOKIE_NAME = 'user_cookie_consent';
-            const COOKIE_EXPIRY_DAYS = 365;
-
-            // Wait for the DOM to be fully loaded before trying to access elements
-            // The 'defer' attribute helps, but this is an extra safeguard.
-            document.addEventListener('DOMContentLoaded', function () {
-                const banner = document.getElementById('cookieConsentBanner');
-                const acceptButton = document.getElementById('cookieAcceptButton');
-                const declineButton = document.getElementById('cookieDeclineButton');
-
-                if (!banner || !acceptButton || !declineButton) {
-                    console.error("SaneGames Cookie Consent: Banner elements not found in the DOM.");
-                    return;
-                }
-
-                function setCookie(name, value, days) {
-                    let expires = "";
-                    if (days) {
-                        const date = new Date();
-                        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                        expires = "; expires=" + date.toUTCString();
-                    }
-                    // Ensure secure flag if site is HTTPS, and SameSite=Lax or Strict
-                    const secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
-                    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax" + secureFlag;
-                }
-
-                function getCookie(name) {
-                    const nameEQ = name + "=";
-                    const ca = document.cookie.split(';');
-                    for (let i = 0; i < ca.length; i++) {
-                        let c = ca[i];
-                        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-                    }
-                    return null;
-                }
-
-                function showBanner() {
-                    banner.style.display = 'block'; // Or 'flex' if you use flexbox for layout
-                    document.body.classList.add('cookie-banner-visible'); // For body padding
-                }
-
-                function hideBanner() {
-                    banner.style.display = 'none';
-                    document.body.classList.remove('cookie-banner-visible');
-                }
-
-                function initializeConsentedScripts() {
-                    console.log("Cookie consent given. Initializing consented scripts.");
-                    if (typeof posthog !== 'undefined') {
-                        posthog.init("phc_W4DPbbp1Qbz4lPVtWrFF54GFUabBHpKzNJx9U6fryBZ", {
-                            api_host: "https://posthog.elouan.xyz",
-                            ui_host: 'https://us.posthog.com', // Add if needed
-                            person_profiles: 'always', // Add if needed
-                            loaded: function (posthog_instance) {
-                                console.log("PostHog initialized after consent.");
-                                // posthog_instance.capture('$pageview'); // Optional: capture pageview after init
-                            }
-                        });
-                    }
-                    // Add other consented script initializations here
-                }
-
-                function handleAccept() {
-                    setCookie(COOKIE_NAME, 'accepted', COOKIE_EXPIRY_DAYS);
-                    hideBanner();
-                    initializeConsentedScripts();
-                }
-
-                function handleDecline() {
-                    setCookie(COOKIE_NAME, 'declined', COOKIE_EXPIRY_DAYS);
-                    hideBanner();
-                    console.log("Cookie consent declined. Non-essential scripts will not be initialized.");
-                    if (typeof posthog !== 'undefined') {
-                        // If PostHog was somehow loaded or configured to capture by default before init
-                        // (which is not typical for the standard snippet if init is deferred),
-                        // this ensures it's explicitly opted out.
-                        posthog.opt_out_capturing();
-                    }
-                }
-
-                const userConsent = getCookie(COOKIE_NAME);
-
-                if (userConsent === 'accepted') {
-                    hideBanner(); // Ensure it's hidden
-                    initializeConsentedScripts();
-                } else if (userConsent === 'declined') {
-                    hideBanner(); // Ensure it's hidden
-                    console.log("User has previously declined cookie consent.");
-                    if (typeof posthog !== 'undefined') { // Good to ensure opt-out is re-asserted
-                        posthog.opt_out_capturing();
-                    }
-                } else {
-                    // No valid consent cookie found, show the banner
-                    showBanner();
-                    acceptButton.addEventListener('click', handleAccept);
-                    declineButton.addEventListener('click', handleDecline);
-                }
-            });
-        })();
+        document.addEventListener("DOMContentLoaded", function () { const e = "user_cookie_consent", o = 365, t = document.getElementById("cookieConsentBanner"), n = document.getElementById("cookieAcceptButton"), i = document.getElementById("cookieDeclineButton"); if (!t || !n || !i) return void console.error("SaneGames Cookie Consent: Banner elements not found in the DOM."); function c(e, t, n) { let i = ""; n && (const e = new Date; e.setTime(e.getTime() + n * 24 * 60 * 60 * 1e3), i = "; expires=" + e.toUTCString()); const c = window.location.protocol === "https:" ? "; Secure" : ""; document.cookie = e + "=" + (t || "") + i + "; path=/; SameSite=Lax" + c}function l(e) { const o = e + "="; for (let t of document.cookie.split(";")) { let e = t; for (; " " === e.charAt(0);)e = e.substring(1, e.length); if (0 === e.indexOf(o)) return e.substring(o.length, e.length) } return null } function r() { t.style.display = "block", document.body.classList.add("cookie-banner-visible") } function d() { t.style.display = "none", document.body.classList.remove("cookie-banner-visible") } function s() { console.log("Cookie consent given. Initializing consented scripts."); if ("undefined" != typeof posthog) { posthog.init("phc_W4DPbbp1Qbz4lPVtWrFF54GFUabBHpKzNJx9U6fryBZ", { api_host: "https://posthog.elouan.xyz", ui_host: "https://us.posthog.com", person_profiles: "always", loaded: function (e) { console.log("PostHog initialized after consent.") } }) } } function a() { c(e, "accepted", o), d(), s() } function u() { c(e, "declined", o), d(), console.log("Cookie consent declined. Non-essential scripts will not be initialized."); "undefined" != typeof posthog && posthog.opt_out_capturing() } const p = l(e); "accepted" === p ? (d(), s()) : "declined" === p ? (d(), console.log("User has previously declined cookie consent."), "undefined" != typeof posthog && posthog.opt_out_capturing()) : (r(), n.addEventListener("click", a), i.addEventListener("click", u))});
     </script>
 
     <link rel="stylesheet" href="style.css" />
@@ -178,9 +73,9 @@
             for the full scoop.
         </p>
         <div class="cookie-buttons-container">
-        <button id="cookieDeclineButton">Essentials Only</button>
-        <button id="cookieAcceptButton">Accept All</button>
-    </div>
+            <button id="cookieDeclineButton">Essentials Only</button>
+            <button id="cookieAcceptButton">Accept All</button>
+        </div>
     </div>
 
     <div class="container">
