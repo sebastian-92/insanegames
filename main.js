@@ -316,6 +316,10 @@ async function loadGame() {
         return;
     }
 
+    posthog.capture("game selected", {
+        game: gameSlug
+    })
+
     if (loader) loader.style.display = "flex";
     if (gameInput) {
         gameInput.classList.remove("active");

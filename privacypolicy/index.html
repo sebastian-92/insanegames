@@ -19,11 +19,12 @@
     <meta property="og:url" content="https://sanegames.elouan.xyz/" />
 
     <script>
-        !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "init bs ws ge fs capture De Ai $s register register_once register_for_session unregister unregister_for_session Is getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty xs Ss createPersonProfile Es gs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing ys debug ks getPageViewId captureTraceFeedback captureTraceMetric".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
-    </script>
-
-    <script defer>
-        document.addEventListener("DOMContentLoaded",function(){const e="user_cookie_consent",o=365,t=document.getElementById("cookieConsentBanner"),n=document.getElementById("cookieAcceptButton"),i=document.getElementById("cookieDeclineButton");if(!t||!n||!i)return void console.error("SaneGames Cookie Consent: Banner elements not found in the DOM.");function c(e,t,n){let i="";if(n){const e=new Date;e.setTime(e.getTime()+n*24*60*60*1e3),i="; expires="+e.toUTCString()}const c=window.location.protocol==="https:"?"; Secure":"";document.cookie=e+"="+(t||"")+i+"; path=/; SameSite=Lax"+c}function l(e){const o=e+"=";for(let t of document.cookie.split(";")){let e=t;for(;" "===e.charAt(0);)e=e.substring(1,e.length);if(0===e.indexOf(o))return e.substring(o.length,e.length)}return null}function r(){t.style.display="block",document.body.classList.add("cookie-banner-visible")}function d(){t.style.display="none",document.body.classList.remove("cookie-banner-visible")}function s(){console.log("Cookie consent given. Initializing consented scripts.");if("undefined"!=typeof posthog){posthog.init("phc_W4DPbbp1Qbz4lPVtWrFF54GFUabBHpKzNJx9U6fryBZ",{api_host:"https://posthog.elouan.xyz",ui_host:"https://us.posthog.com",person_profiles:"always",loaded:function(e){console.log("PostHog initialized after consent.")}})}}function a(){c(e,"accepted",o),d(),s()}function u(){c(e,"declined",o),d(),console.log("Cookie consent declined. Non-essential scripts will not be initialized.");"undefined"!=typeof posthog&&posthog.opt_out_capturing()}const p=l(e);"accepted"===p?(d(),s()):"declined"===p?(d(),console.log("User has previously declined cookie consent."),"undefined"!=typeof posthog&&posthog.opt_out_capturing()):(r(),n.addEventListener("click",a),i.addEventListener("click",u))});
+        !function (e, t) { var s, r, o, i; t.__SV || (window.posthog = t, t._i = [], t.init = function (n, a, p) { function g(e, t) { var s = t.split("."); 2 == s.length && (e = e[s[0]], t = s[1]), e[t] = function () { e.push([t].concat(Array.prototype.slice.call(arguments, 0))) } } (o = e.createElement("script")).type = "text/javascript", o.crossOrigin = "anonymous", o.async = !0, o.src = a.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (i = e.getElementsByTagName("script")[0]).parentNode.insertBefore(o, i); var c = t; for (void 0 !== p ? c = t[p] = [] : p = "posthog", c.people = c.people || [], c.toString = function (e) { var t = "posthog"; return "posthog" !== p && (t += "." + p), e || (t += " (stub)"), t }, c.people.toString = function () { return c.toString(1) + ".people (stub)" }, s = "init bs ws ge fs capture De Ai $s register register_once register_for_session unregister unregister_for_session Is getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty xs Ss createPersonProfile Es gs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing ys debug ks getPageViewId captureTraceFeedback captureTraceMetric".split(" "), r = 0; r < s.length; r++)g(c, s[r]); t._i.push([n, a, p]) }, t.__SV = 1) }(document, window.posthog || []),
+            posthog.init("phc_W4DPbbp1Qbz4lPVtWrFF54GFUabBHpKzNJx9U6fryBZ", {
+                api_host: "https://posthog.elouan.xyz/ingest",
+                ui_host: "https://us.posthog.com",
+                person_profiles: "always",
+            });
     </script>
 
     <link rel="stylesheet" href="style.css" />
@@ -61,23 +62,6 @@
 </head>
 
 <body>
-    <div id="cookieConsentBanner"
-        style="display:none; position:fixed; bottom:0; left:0; width:100%; background-color:#333; color:white; padding:15px 20px; z-index:10000; box-shadow:0 -2px 5px rgba(0,0,0,0.2); text-align:center; font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5;">
-        <p style="margin:0 0 10px 0;">
-            🍪 Hey there, digital voyager! My website uses cookies. Not the delicious, chocolate-chip kind (sadly), but
-            the digital kind that helps me make your experience awesome and understand how you use our site (so I can
-            make it even *more* awesome).
-            Some are essential, others help me with cool analytics and stats. You can choose your cookie adventure
-            below!
-            <a href="/privacypolicy" style="color:#79c0ff; text-decoration:underline;">Read our Privacy Policy</a>
-            for the full scoop.
-        </p>
-        <div class="cookie-buttons-container">
-            <button id="cookieDeclineButton">Essentials Only</button>
-            <button id="cookieAcceptButton">Accept All</button>
-        </div>
-    </div>
-
     <div class="container">
         <h1>Privacy Policy for SaneGames</h1>
         <p class="last-updated">Last Updated: May 22, 2025</p>
