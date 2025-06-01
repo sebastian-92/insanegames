@@ -11,6 +11,29 @@ const adBlockList = [
     "imasdk.googleapis.com",
 ];
 
+// --- Constants for UI Modification & Polling ---
+const BUTTON_TO_MODIFY_TEXT_SELECTOR = '.MuiButtonBase-root.css-1fs4034';
+const BUTTON_NEW_TEXT = "Continue (CLICK HERE)";
+
+const DIV_ONE_SELECTOR = '.css-1bkw7cw'; // For "Start Playing"
+const DIV_ONE_NEW_TEXT = "Start Playing";
+
+const DIV_TWO_SELECTOR = '.css-1uzrx98'; // For "Sorry about this popup..."
+const DIV_TWO_NEW_TEXT = "Sorry about this popup, just ignore it and click continue!";
+
+const MUI_BUTTON_TO_REMOVE_SELECTOR = ".MuiButtonBase-root.css-b48h4t";
+
+let uiModificationPollingInterval = null;
+let uiModificationPollingTimeout = null;
+const UI_POLL_DURATION_MS = 60 * 1000; // 1 minute
+const UI_POLL_INTERVAL_MS = 300;      // Check every 300ms
+
+// Flags to track if modifications are done (for polling)
+let buttonTextModified = false;
+let divOneTextModified = false;
+let divTwoTextModified = false;
+
+
 (function blockAds() {
     if (typeof window === "undefined") return; // Guard for non-browser environments
 
@@ -92,130 +115,150 @@ const adBlockList = [
     }
 })();
 
-// Renamed function to reflect its broader purpose
 function applyUiModifications() {
     if (typeof document === "undefined") return;
 
-    // --- Specific MUI Button Text Change (for .css-1fs4034) ---
-    const buttonToModifyTextSelector = '.MuiButtonBase-root.css-1fs4034'; // Corrected with leading dot
-    document.querySelectorAll(buttonToModifyTextSelector).forEach(button => {
-        if (button instanceof HTMLElement) {
-            const newText = "Continue (CLICK HERE)";
-            if (button.textContent !== newText) {
-                let textContainer = button.querySelector('.MuiButton-label, .MuiButton-label-root, span');
-                if (textContainer) {
-                    textContainer.textContent = newText;
-                } else {
-                    button.textContent = newText;
-                }
-                console.log(`SaneGames: Changed text of button matching "${buttonToModifyTextSelector}"`);
+    // --- 1. Modify Text Content of Target Elements ---
+    if (!buttonTextModified) {
+        const buttonNode = document.querySelector(BUTTON_TO_MODIFY_TEXT_SELECTOR);
+        if (buttonNode instanceof HTMLElement) {
+            let textContainer = buttonNode.querySelector('.MuiButton-label, .MuiButton-label-root, span');
+            let currentText = textContainer ? textContainer.textContent : buttonNode.textContent;
+            if (currentText !== BUTTON_NEW_TEXT) {
+                if (textContainer) textContainer.textContent = BUTTON_NEW_TEXT;
+                else buttonNode.textContent = BUTTON_NEW_TEXT;
+                console.log(`SaneGames: Changed text of button matching "${BUTTON_TO_MODIFY_TEXT_SELECTOR}"`);
             }
+            buttonTextModified = true;
         }
-    });
+    }
 
-    // --- Selector for the MUI button to remove (for .css-b48h4t) ---
-    const muiButtonToRemoveSelector = ".MuiButtonBase-root.css-b48h4t"; // Corrected with leading dot
+    if (!divOneTextModified) {
+        const divOneNode = document.querySelector(DIV_ONE_SELECTOR);
+        if (divOneNode instanceof HTMLElement) {
+            if (divOneNode.textContent !== DIV_ONE_NEW_TEXT) {
+                divOneNode.textContent = DIV_ONE_NEW_TEXT;
+                console.log(`SaneGames: Changed text of div matching "${DIV_ONE_SELECTOR}"`);
+            }
+            divOneTextModified = true;
+        }
+    }
 
+    if (!divTwoTextModified) {
+        const divTwoNode = document.querySelector(DIV_TWO_SELECTOR);
+        if (divTwoNode instanceof HTMLElement) {
+            if (divTwoNode.textContent !== DIV_TWO_NEW_TEXT) {
+                divTwoNode.textContent = DIV_TWO_NEW_TEXT;
+                console.log(`SaneGames: Changed text of div matching "${DIV_TWO_SELECTOR}"`);
+            }
+            divTwoTextModified = true;
+        }
+    }
+
+    // --- 2. Element Removals ---
     const selectorsToRemove = [
-        muiButtonToRemoveSelector,
+        MUI_BUTTON_TO_REMOVE_SELECTOR,
         "#crazygames-ad",
         ".ad-container",
     ];
 
     selectorsToRemove.forEach((selector) => {
         document.querySelectorAll(selector).forEach((el) => {
-            if (el.parentNode) { // Check if parentNode exists before removing
+            if (el.parentNode) {
                 console.warn(
                     `SaneGames: Removed element matching selector "${selector}":`,
-                    el.tagName,
-                    el.id,
-                    el.className
+                    el.tagName, el.id, el.className
                 );
                 el.remove();
             }
         });
     });
 
-    // --- Broader ad-blocking/element removal logic ---
-    document
-        .querySelectorAll(
-            "iframe, script, div, img, ins, video, style, button, a"
-        )
-        .forEach((el) => {
-            const elSrc = el.src || el.href || el.data || el.poster;
-            const elId = el.id || "";
-            const elClass =
-                el.className ||
-                (el.classList ? Array.from(el.classList).join(" ") : "");
+    // --- 3. Broader ad-blocking/element removal logic ---
+    document.querySelectorAll("iframe, script, div, img, ins, video, style, button, a").forEach((el) => {
+        if (el.matches && (
+            el.matches(BUTTON_TO_MODIFY_TEXT_SELECTOR) ||
+            el.matches(DIV_ONE_SELECTOR) ||
+            el.matches(DIV_TWO_SELECTOR) ||
+            el.matches(MUI_BUTTON_TO_REMOVE_SELECTOR)
+        )) {
+            return;
+        }
 
-            let isPotentialAdOrAnnoyance = false;
+        const elSrc = el.src || el.href || el.data || el.poster;
+        const elId = el.id || "";
+        const elClass = el.className || (el.classList ? Array.from(el.classList).join(" ") : "");
+        let isPotentialAdOrAnnoyance = false;
 
-            // Ensure we don't try to re-process elements we've specifically handled or intend to keep
-            if (el.matches && (el.matches(buttonToModifyTextSelector) || el.matches(muiButtonToRemoveSelector))) {
-                // Already handled by specific logic above (one is text-changed, other is removed)
-                // No further action needed for these specific selectors in this generic loop
-            }
-            else if (
-                elSrc &&
-                typeof elSrc === "string" &&
-                adBlockList.some((domain) => elSrc.includes(domain))
-            ) {
+        if (elSrc && typeof elSrc === "string" && adBlockList.some((domain) => elSrc.includes(domain))) {
+            isPotentialAdOrAnnoyance = true;
+        } else if (adBlockList.some((keyword) => {
+            const simpleKeyword = keyword.split(".")[0];
+            return (typeof elId === "string" && elId.toLowerCase().includes(simpleKeyword)) ||
+                   (typeof elClass === "string" && elClass.toLowerCase().includes(simpleKeyword));
+        })) {
+            isPotentialAdOrAnnoyance = true;
+        } else {
+            const commonAdKeywords = ["adbox", "advert", "google_ads", "banner_ad", "promo", "sponsor"];
+            if (commonAdKeywords.some(keyword =>
+                (typeof elId === "string" && elId.toLowerCase().includes(keyword)) ||
+                (typeof elClass === "string" && elClass.toLowerCase().includes(keyword))
+            )) {
                 isPotentialAdOrAnnoyance = true;
             }
-            else if (
-                adBlockList.some((keyword) => {
-                    const simpleKeyword = keyword.split(".")[0];
-                    return (
-                        (typeof elId === "string" &&
-                            elId.toLowerCase().includes(simpleKeyword)) ||
-                        (typeof elClass === "string" &&
-                            elClass.toLowerCase().includes(simpleKeyword))
-                    );
-                })
-            ) {
-                isPotentialAdOrAnnoyance = true;
-            }
-            else {
-                const commonAdKeywords = [
-                    "adbox",
-                    "advert",
-                    "google_ads",
-                    "banner_ad",
-                    "promo",
-                    "sponsor",
-                ];
-                if (
-                    commonAdKeywords.some(
-                        (keyword) =>
-                            (typeof elId === "string" &&
-                                elId.toLowerCase().includes(keyword)) ||
-                            (typeof elClass === "string" &&
-                                elClass.toLowerCase().includes(keyword))
-                    )
-                ) {
-                    isPotentialAdOrAnnoyance = true;
-                }
-            }
+        }
 
-            if (isPotentialAdOrAnnoyance && el.parentNode) {
-                console.warn(
-                    "SaneGames: Removed potential ad/annoying element (generic):",
-                    el.tagName,
-                    el.id,
-                    el.className,
-                    elSrc
-                );
-                el.remove();
-            }
-        });
+        if (isPotentialAdOrAnnoyance && el.parentNode) {
+            console.warn(
+                "SaneGames: Removed potential ad/annoying element (generic):",
+                el.tagName, el.id, el.className, elSrc
+            );
+            el.remove();
+        }
+    });
+
+    if (buttonTextModified && divOneTextModified && divTwoTextModified && uiModificationPollingInterval) {
+        console.log("SaneGames: All target UI elements appear modified. Stopping poll from applyUiModifications.");
+        stopPollingForUiModifications();
+    }
+}
+
+function startPollingForUiModifications() {
+    if (uiModificationPollingInterval) return;
+
+    buttonTextModified = false;
+    divOneTextModified = false;
+    divTwoTextModified = false;
+
+    console.log("SaneGames: Starting to poll for UI modifications.");
+    if (uiModificationPollingTimeout) clearTimeout(uiModificationPollingTimeout);
+
+    uiModificationPollingInterval = setInterval(() => {
+        applyUiModifications();
+    }, UI_POLL_INTERVAL_MS);
+
+    uiModificationPollingTimeout = setTimeout(() => {
+        if (uiModificationPollingInterval) {
+            console.log("SaneGames: UI modification polling duration exceeded. Stopping poll.");
+            stopPollingForUiModifications();
+        }
+    }, UI_POLL_DURATION_MS);
+}
+
+function stopPollingForUiModifications() {
+    if (uiModificationPollingInterval) {
+        clearInterval(uiModificationPollingInterval);
+        uiModificationPollingInterval = null;
+        console.log("SaneGames: Polling for UI modifications stopped.");
+    }
+    if (uiModificationPollingTimeout) {
+        clearTimeout(uiModificationPollingTimeout);
+        uiModificationPollingTimeout = null;
+    }
 }
 
 if (typeof window !== "undefined" && typeof MutationObserver !== "undefined") {
     const observer = new MutationObserver((mutations) => {
-        // No need to check mutations in detail if applyUiModifications handles all cases
-        // Just call it to re-evaluate the DOM.
-        // For performance, you might add checks if only specific mutations trigger it,
-        // but for simplicity and robustness, calling it on any observed change is fine.
         applyUiModifications();
     });
 
@@ -313,12 +356,18 @@ async function loadGame() {
     if (!gameSlug) {
         if (loader) loader.style.display = "none";
         if (gameInput) gameInput.classList.add("active");
+        stopPollingForUiModifications(); // Stop polling if no game to load
         return;
     }
 
-    posthog.capture("game selected", {
-        game: gameSlug
-    })
+    if (typeof posthog !== 'undefined' && typeof posthog.capture === 'function') {
+        posthog.capture("game selected", {
+            game: gameSlug
+        });
+    } else {
+        console.log("posthog failed")
+    }
+
 
     if (loader) loader.style.display = "flex";
     if (gameInput) {
@@ -337,6 +386,7 @@ async function loadGame() {
             gameInput.classList.add("active");
             gameInput.style.display = "flex";
         }
+        stopPollingForUiModifications(); // Stop polling if config fails
         return;
     }
 
@@ -360,6 +410,7 @@ async function loadGame() {
             gameInput.classList.add("active");
             gameInput.style.display = "flex";
         }
+        stopPollingForUiModifications(); // Stop polling if SDK script fails
     };
 
     script.onload = () => {
@@ -376,6 +427,7 @@ async function loadGame() {
                     );
                     if (loader) loader.remove();
                     if (gameInput) gameInput.remove();
+                    startPollingForUiModifications(); // START POLLING AFTER GAME IS LOADED
                 })
                 .catch((error) => {
                     console.error(
@@ -420,6 +472,7 @@ async function loadGame() {
                         gameInput.classList.add("active");
                         gameInput.style.display = "flex";
                     }
+                    stopPollingForUiModifications(); // Stop polling if game loading fails
                 });
         } else {
             console.error(
@@ -434,6 +487,7 @@ async function loadGame() {
                 gameInput.classList.add("active");
                 gameInput.style.display = "flex";
             }
+            stopPollingForUiModifications(); // Stop polling if SDK is malformed
         }
     };
     document.head.appendChild(script);
@@ -479,6 +533,7 @@ if (typeof window !== "undefined") {
             closeRecommendations();
         }
     };
+    window.addEventListener('beforeunload', stopPollingForUiModifications);
 }
 
 loadGame();
