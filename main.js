@@ -12,27 +12,27 @@ const adBlockList = [
 ];
 
 // --- Constants for UI Modification & Polling ---
-const BUTTON_TO_MODIFY_TEXT_SELECTOR = '.MuiButtonBase-root.css-1fs4034';
+const BUTTON_TO_MODIFY_TEXT_SELECTOR = ".MuiButtonBase-root.css-1fs4034";
 const BUTTON_NEW_TEXT = "Continue (CLICK HERE)";
 
-const DIV_ONE_SELECTOR = '.css-1bkw7cw'; // For "Start Playing"
+const DIV_ONE_SELECTOR = ".css-1bkw7cw"; // For "Start Playing"
 const DIV_ONE_NEW_TEXT = "Start Playing";
 
-const DIV_TWO_SELECTOR = '.css-1uzrx98'; // For "Sorry about this popup..."
-const DIV_TWO_NEW_TEXT = "Sorry about this popup, just ignore it and click continue!";
+const DIV_TWO_SELECTOR = ".css-1uzrx98"; // For "Sorry about this popup..."
+const DIV_TWO_NEW_TEXT =
+    "Sorry about this popup, just ignore it and click continue!";
 
 const MUI_BUTTON_TO_REMOVE_SELECTOR = ".MuiButtonBase-root.css-b48h4t";
 
 let uiModificationPollingInterval = null;
 let uiModificationPollingTimeout = null;
 const UI_POLL_DURATION_MS = 60 * 1000; // 1 minute
-const UI_POLL_INTERVAL_MS = 300;      // Check every 300ms
+const UI_POLL_INTERVAL_MS = 300; // Check every 300ms
 
 // Flags to track if modifications are done (for polling)
 let buttonTextModified = false;
 let divOneTextModified = false;
 let divTwoTextModified = false;
-
 
 (function blockAds() {
     if (typeof window === "undefined") return; // Guard for non-browser environments
@@ -120,14 +120,22 @@ function applyUiModifications() {
 
     // --- 1. Modify Text Content of Target Elements ---
     if (!buttonTextModified) {
-        const buttonNode = document.querySelector(BUTTON_TO_MODIFY_TEXT_SELECTOR);
+        const buttonNode = document.querySelector(
+            BUTTON_TO_MODIFY_TEXT_SELECTOR
+        );
         if (buttonNode instanceof HTMLElement) {
-            let textContainer = buttonNode.querySelector('.MuiButton-label, .MuiButton-label-root, span');
-            let currentText = textContainer ? textContainer.textContent : buttonNode.textContent;
+            let textContainer = buttonNode.querySelector(
+                ".MuiButton-label, .MuiButton-label-root, span"
+            );
+            let currentText = textContainer
+                ? textContainer.textContent
+                : buttonNode.textContent;
             if (currentText !== BUTTON_NEW_TEXT) {
                 if (textContainer) textContainer.textContent = BUTTON_NEW_TEXT;
                 else buttonNode.textContent = BUTTON_NEW_TEXT;
-                console.log(`SaneGames: Changed text of button matching "${BUTTON_TO_MODIFY_TEXT_SELECTOR}"`);
+                console.log(
+                    `SaneGames: Changed text of button matching "${BUTTON_TO_MODIFY_TEXT_SELECTOR}"`
+                );
             }
             buttonTextModified = true;
         }
@@ -138,7 +146,9 @@ function applyUiModifications() {
         if (divOneNode instanceof HTMLElement) {
             if (divOneNode.textContent !== DIV_ONE_NEW_TEXT) {
                 divOneNode.textContent = DIV_ONE_NEW_TEXT;
-                console.log(`SaneGames: Changed text of div matching "${DIV_ONE_SELECTOR}"`);
+                console.log(
+                    `SaneGames: Changed text of div matching "${DIV_ONE_SELECTOR}"`
+                );
             }
             divOneTextModified = true;
         }
@@ -149,7 +159,9 @@ function applyUiModifications() {
         if (divTwoNode instanceof HTMLElement) {
             if (divTwoNode.textContent !== DIV_TWO_NEW_TEXT) {
                 divTwoNode.textContent = DIV_TWO_NEW_TEXT;
-                console.log(`SaneGames: Changed text of div matching "${DIV_TWO_SELECTOR}"`);
+                console.log(
+                    `SaneGames: Changed text of div matching "${DIV_TWO_SELECTOR}"`
+                );
             }
             divTwoTextModified = true;
         }
@@ -167,7 +179,9 @@ function applyUiModifications() {
             if (el.parentNode) {
                 console.warn(
                     `SaneGames: Removed element matching selector "${selector}":`,
-                    el.tagName, el.id, el.className
+                    el.tagName,
+                    el.id,
+                    el.className
                 );
                 el.remove();
             }
@@ -175,50 +189,89 @@ function applyUiModifications() {
     });
 
     // --- 3. Broader ad-blocking/element removal logic ---
-    document.querySelectorAll("iframe, script, div, img, ins, video, style, button, a").forEach((el) => {
-        if (el.matches && (
-            el.matches(BUTTON_TO_MODIFY_TEXT_SELECTOR) ||
-            el.matches(DIV_ONE_SELECTOR) ||
-            el.matches(DIV_TWO_SELECTOR) ||
-            el.matches(MUI_BUTTON_TO_REMOVE_SELECTOR)
-        )) {
-            return;
-        }
-
-        const elSrc = el.src || el.href || el.data || el.poster;
-        const elId = el.id || "";
-        const elClass = el.className || (el.classList ? Array.from(el.classList).join(" ") : "");
-        let isPotentialAdOrAnnoyance = false;
-
-        if (elSrc && typeof elSrc === "string" && adBlockList.some((domain) => elSrc.includes(domain))) {
-            isPotentialAdOrAnnoyance = true;
-        } else if (adBlockList.some((keyword) => {
-            const simpleKeyword = keyword.split(".")[0];
-            return (typeof elId === "string" && elId.toLowerCase().includes(simpleKeyword)) ||
-                   (typeof elClass === "string" && elClass.toLowerCase().includes(simpleKeyword));
-        })) {
-            isPotentialAdOrAnnoyance = true;
-        } else {
-            const commonAdKeywords = ["adbox", "advert", "google_ads", "banner_ad", "promo", "sponsor"];
-            if (commonAdKeywords.some(keyword =>
-                (typeof elId === "string" && elId.toLowerCase().includes(keyword)) ||
-                (typeof elClass === "string" && elClass.toLowerCase().includes(keyword))
-            )) {
-                isPotentialAdOrAnnoyance = true;
+    document
+        .querySelectorAll(
+            "iframe, script, div, img, ins, video, style, button, a"
+        )
+        .forEach((el) => {
+            if (
+                el.matches &&
+                (el.matches(BUTTON_TO_MODIFY_TEXT_SELECTOR) ||
+                    el.matches(DIV_ONE_SELECTOR) ||
+                    el.matches(DIV_TWO_SELECTOR) ||
+                    el.matches(MUI_BUTTON_TO_REMOVE_SELECTOR))
+            ) {
+                return;
             }
-        }
 
-        if (isPotentialAdOrAnnoyance && el.parentNode) {
-            console.warn(
-                "SaneGames: Removed potential ad/annoying element (generic):",
-                el.tagName, el.id, el.className, elSrc
-            );
-            el.remove();
-        }
-    });
+            const elSrc = el.src || el.href || el.data || el.poster;
+            const elId = el.id || "";
+            const elClass =
+                el.className ||
+                (el.classList ? Array.from(el.classList).join(" ") : "");
+            let isPotentialAdOrAnnoyance = false;
 
-    if (buttonTextModified && divOneTextModified && divTwoTextModified && uiModificationPollingInterval) {
-        console.log("SaneGames: All target UI elements appear modified. Stopping poll from applyUiModifications.");
+            if (
+                elSrc &&
+                typeof elSrc === "string" &&
+                adBlockList.some((domain) => elSrc.includes(domain))
+            ) {
+                isPotentialAdOrAnnoyance = true;
+            } else if (
+                adBlockList.some((keyword) => {
+                    const simpleKeyword = keyword.split(".")[0];
+                    return (
+                        (typeof elId === "string" &&
+                            elId.toLowerCase().includes(simpleKeyword)) ||
+                        (typeof elClass === "string" &&
+                            elClass.toLowerCase().includes(simpleKeyword))
+                    );
+                })
+            ) {
+                isPotentialAdOrAnnoyance = true;
+            } else {
+                const commonAdKeywords = [
+                    "adbox",
+                    "advert",
+                    "google_ads",
+                    "banner_ad",
+                    "promo",
+                    "sponsor",
+                ];
+                if (
+                    commonAdKeywords.some(
+                        (keyword) =>
+                            (typeof elId === "string" &&
+                                elId.toLowerCase().includes(keyword)) ||
+                            (typeof elClass === "string" &&
+                                elClass.toLowerCase().includes(keyword))
+                    )
+                ) {
+                    isPotentialAdOrAnnoyance = true;
+                }
+            }
+
+            if (isPotentialAdOrAnnoyance && el.parentNode) {
+                console.warn(
+                    "SaneGames: Removed potential ad/annoying element (generic):",
+                    el.tagName,
+                    el.id,
+                    el.className,
+                    elSrc
+                );
+                el.remove();
+            }
+        });
+
+    if (
+        buttonTextModified &&
+        divOneTextModified &&
+        divTwoTextModified &&
+        uiModificationPollingInterval
+    ) {
+        console.log(
+            "SaneGames: All target UI elements appear modified. Stopping poll from applyUiModifications."
+        );
         stopPollingForUiModifications();
     }
 }
@@ -231,7 +284,8 @@ function startPollingForUiModifications() {
     divTwoTextModified = false;
 
     console.log("SaneGames: Starting to poll for UI modifications.");
-    if (uiModificationPollingTimeout) clearTimeout(uiModificationPollingTimeout);
+    if (uiModificationPollingTimeout)
+        clearTimeout(uiModificationPollingTimeout);
 
     uiModificationPollingInterval = setInterval(() => {
         applyUiModifications();
@@ -239,7 +293,9 @@ function startPollingForUiModifications() {
 
     uiModificationPollingTimeout = setTimeout(() => {
         if (uiModificationPollingInterval) {
-            console.log("SaneGames: UI modification polling duration exceeded. Stopping poll.");
+            console.log(
+                "SaneGames: UI modification polling duration exceeded. Stopping poll."
+            );
             stopPollingForUiModifications();
         }
     }, UI_POLL_DURATION_MS);
@@ -267,14 +323,14 @@ if (typeof window !== "undefined" && typeof MutationObserver !== "undefined") {
             applyUiModifications(); // Initial run
             observer.observe(document.body, {
                 childList: true,
-                subtree: true
+                subtree: true,
             });
         } else {
             document.addEventListener("DOMContentLoaded", () => {
                 applyUiModifications(); // Initial run
                 observer.observe(document.body, {
                     childList: true,
-                    subtree: true
+                    subtree: true,
                 });
             });
         }
@@ -360,15 +416,6 @@ async function loadGame() {
         return;
     }
 
-    if (typeof posthog !== 'undefined' && typeof posthog.capture === 'function') {
-        posthog.capture("game selected", {
-            game: gameSlug
-        });
-    } else {
-        console.log("posthog failed")
-    }
-
-
     if (loader) loader.style.display = "flex";
     if (gameInput) {
         gameInput.classList.remove("active");
@@ -388,6 +435,18 @@ async function loadGame() {
         }
         stopPollingForUiModifications(); // Stop polling if config fails
         return;
+    }
+
+    if (
+        typeof posthog !== "undefined" &&
+        typeof posthog.capture === "function"
+    ) {
+        posthog.capture("game selected", {
+            gameslug: gameSlug,
+            gamename: options.gameName,
+        });
+    } else {
+        console.log("posthog failed");
     }
 
     document.title = (options.gameName || gameSlug) + " | SaneGames";
@@ -533,7 +592,7 @@ if (typeof window !== "undefined") {
             closeRecommendations();
         }
     };
-    window.addEventListener('beforeunload', stopPollingForUiModifications);
+    window.addEventListener("beforeunload", stopPollingForUiModifications);
 }
 
 loadGame();
