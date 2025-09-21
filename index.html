@@ -16,100 +16,33 @@
     <meta property="og:description" content="A better client for all CrazyGames games, with no ads or annoying UI." />
     <meta property="og:image" content="assets/thumbnail.png" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://sanegames.elouan.xyz/" />
-
-    <script>
-        !function (e, t) { var s, r, o, i; t.__SV || (window.posthog = t, t._i = [], t.init = function (n, a, p) { function g(e, t) { var s = t.split("."); 2 == s.length && (e = e[s[0]], t = s[1]), e[t] = function () { e.push([t].concat(Array.prototype.slice.call(arguments, 0))) } } (o = e.createElement("script")).type = "text/javascript", o.crossOrigin = "anonymous", o.async = !0, o.src = a.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (i = e.getElementsByTagName("script")[0]).parentNode.insertBefore(o, i); var c = t; for (void 0 !== p ? c = t[p] = [] : p = "posthog", c.people = c.people || [], c.toString = function (e) { var t = "posthog"; return "posthog" !== p && (t += "." + p), e || (t += " (stub)"), t }, c.people.toString = function () { return c.toString(1) + ".people (stub)" }, s = "init bs ws ge fs capture De Ai $s register register_once register_for_session unregister unregister_for_session Is getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty xs Ss createPersonProfile Es gs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing ys debug ks getPageViewId captureTraceFeedback captureTraceMetric".split(" "), r = 0; r < s.length; r++)g(c, s[r]); t._i.push([n, a, p]) }, t.__SV = 1) }(document, window.posthog || []),
-            posthog.init("phc_W4DPbbp1Qbz4lPVtWrFF54GFUabBHpKzNJx9U6fryBZ", {
-                api_host: "https://posthog.elouan.xyz/ingest",
-                ui_host: "https://us.posthog.com",
-                person_profiles: "always",
-            });
-    </script>
-
-    <link rel="stylesheet" href="style.css" />
+    <!-- <meta property="og:url" content="https://sanegames.elouan.xyz/" /> -->
+    <link rel="stylesheet" href="style.css" />    
+    <script src="index.js"></script>
 </head>
-
 <body>
-    <div class="loader" id="loader">Loading…</div>
+    <h1 style="text-align: center;">InsaneGames</h1>
+    <h3 style="text-align: center;">Search for a game to play it without ads or annoying UI!</h3>
+    <input type="text" id="searchInput"/>
+    <div id="results">
 
-    <div class="loader" id="gameInput">
-        <img src="assets/logo.png" alt="SaneGames Logo" style="width:100px; display:block; margin: 0 auto;" />
-        <h1>Welcome to <b>SaneGames.</b></h1>
-        <h3>
-            A better client for all CrazyGames games, with no ads or
-            annoying UI.
-        </h3>
-        <br />
-
-        <h4>Option 1: Use the Bookmarklet (Recommended)</h4>
-        <p>
-            To easily upgrade your gaming experience, drag the button below
-            to your bookmarks bar.
-        </p>
-        <p>
-            Then, when you're on a CrazyGames game
-            page, just click the bookmarklet!
-        </p>
-        <a href="javascript:(function(){const s='sanegames.elouan.xyz',h=window.location.hostname,f=window.location.href;if(h===s){alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!')}else{const r=/crazygames\.(?:com|id|dev|co\.uk|net|org|[a-z]{2})\/game\/([^\/?#]+)/,m=f.match(r);if(m&&m[1]){const g=m[1],n=`https://sanegames.elouan.xyz/?game=${g}`;window.location.href=n}else{alert('Please navigate to a CrazyGames game page first, then click the bookmarklet.')}}})();"
-            class="bookmarklet-button" draggable="true"
-            onclick="event.preventDefault(); alert('Hey, don\'t CLICK me here, DRAG me to your bookmarks bar!');">
-            Play Sane
-        </a>
-        <p>
-            Now, head over to the main
-            <a href="https://www.crazygames.com/" target="_blank">CrazyGames</a>
-            website, find a game, then click your new bookmarklet! It's that
-            easy!
-        </p>
-        <br />
-
-        <h4>Option 2: Enter Game Slug Manually</h4>
-        <p>
-            Alternatively, find a game on
-            <a href="https://www.crazygames.com/">CrazyGames</a>. The URL in your address bar will look
-            something like
-            <br /><code>https://www.crazygames.com/game/your-game-slug</code>. <br />Copy the
-            <code>your-game-slug</code> part and paste it
-            below.
-        </p>
-        <input type="text" placeholder="e.g., crazy-flips-3d" id="gameSlugInput" />
-        <button onclick="loadGameFromInput()">Play Game</button>
-        <br />
-        <!--
-		<a onclick="recommendations()" style="cursor: help">Game Recommendations</a>
-		-->
-        <br />
-        <br />
-        <p>
-            <i>PS: SaneGames is
-                <a href="https://github.com/sanegamz/sanegamz.github.io">Open Source</a>!</i>
-        </p>
-
-        <a href="/privacypolicy">Privacy Policy</a>
     </div>
-
-    <!--
-	<div id="recommendationsPopup">
-		<h2>Game Recommendations</h2>
-		<p>Below are a few half-decent games.</p>
-		<ul>
-			<li>
-				<a href="?game=ragdoll-archers" onclick="closeRecommendations()">Ragdoll Archers</a>
-			</li>
-			<li>
-				<a href="?game=havendock" onclick="closeRecommendations()">Havendock</a>
-			</li>
-			<li>
-				<a href="?game=crazy-flips-3d" onclick="closeRecommendations()">Crazy Flips 3D</a>
-			</li>
-		</ul>
-
-		<h3 onclick="closeRecommendations()" style="cursor: pointer; color: #e0d9ff;">Close</h3>
-	</div>
-	-->
-
-    <script src="main.js"></script>
+    <script>
+        document.getElementById('searchInput').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            window.location.search = '?q=' + encodeURIComponent(document.getElementById('searchInput').value);
+            search(document.getElementById('searchInput').value);
+        }
+    });
+    if (window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q');
+        if (q) {
+            document.getElementById('searchInput').value = q;
+            search(q);
+        }
+    }
+    </script>
 </body>
 
 </html>
