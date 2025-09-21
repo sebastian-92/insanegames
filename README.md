@@ -1,3 +1,3 @@
 # insanegames
 Play games from CrazyGames without annoyances and stuff.
-## basically 
+## sanegames, but with search and stuff
