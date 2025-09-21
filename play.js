@@ -595,4 +595,44 @@ if (typeof window !== "undefined") {
     window.addEventListener("beforeunload", stopPollingForUiModifications);
 }
 
+const updateIframeSrc = (iframeElement, prefix) => {
+  if (iframeElement.src && iframeElement.src !== 'about:blank') {
+    if (!iframeElement.src.startsWith(prefix)) {
+      iframeElement.src = prefix + iframeElement.src;
+      console.log('Updated iframe src:', iframeElement.src);
+    }
+  }
+};
+
+const observeIframes = (prefix) => {
+  document.querySelectorAll('iframe').forEach(iframe => {
+    updateIframeSrc(iframe, prefix);
+  });
+
+  const observer = new MutationObserver((mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        for (const addedNode of mutation.addedNodes) {
+          if (addedNode.tagName === 'IFRAME') {
+            updateIframeSrc(addedNode, prefix);
+          }
+          if (addedNode.querySelectorAll) {
+            addedNode.querySelectorAll('iframe').forEach(iframe => {
+              updateIframeSrc(iframe, prefix);
+            });
+          }
+        }
+      }
+    }
+  });
+  const config = { childList: true, subtree: true };
+  observer.observe(document.body, config);
+
+  console.log('MutationObserver is active and watching for iframes.');
+};
+
+// fix x frame errors
+const prefix = 'https://embeddr.rhw.one/embed#';
+
+observeIframes(prefix);
 loadGame();
